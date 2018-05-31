@@ -155,10 +155,17 @@ In practice, we don't have to convert the values as we have software that will d
 - Select one of the FASTQ files as input and *Execute* the tool.
 - When the tool finishes running, you should have an HTML file in your History. Click on the eye icon to view the various quality metrics.
 
-Look at the generated FastQC metrics. This data looks pretty good - high per-base quality scores (most above 30).
+The most important image is whether the base quality decreases significantly over the length of the read
 
-<img src="media/fastqc.png" height=700px>
+![](media/fastqc-2a.png)
 
+Good quality data should look something like:-
+
+![](media/fastqc-2b.png)
+
+
+
+Look at the generated FastQC metrics for your uploaded fastq files. This data looks pretty good - high per-base quality scores (most above 30).
 
 
 ## Section 4: Alignment
@@ -290,26 +297,21 @@ For instance, a particular read has a flag of 163
 
 There is a set of properties that a read can possess. If a particular property is observed, a corresponding power of 2 is added multiplied by 1. The final value is derived by summing all the powers of 2.
 
+![](https://galaxyproject.org/tutorials/ngs/sam_flag.png)
 
-```
- 	ReadHasProperty 	Binary 	MultiplyBy
-isPaired 	TRUE 	1 	1
-isProperPair 	TRUE 	1 	2
-isUnmappedQuery 	FALSE 	0 	4
-hasUnmappedMate 	FALSE 	0 	8
-isMinusStrand 	FALSE 	0 	16
-isMateMinusStrand 	TRUE 	1 	32
-isFirstMateRead 	FALSE 	0 	64
-isSecondMateRead 	TRUE 	1 	128
-isSecondaryAlignment 	FALSE 	0 	256
-isNotPassingQualityControls 	FALSE 	0 	512
-isDuplicate 	FALSE 	0 	1024
+Flag Value | Meaning
+---------- | --------------------------------
+69 (= 1 + 4 + 64) 	| The read is paired, is the first read in the pair, and is unmapped.
+77 (= 1 + 4 + 8 + 64) |	The read is paired, is the first read in the pair, both are unmapped.
+83 (= 1 + 2 + 16 + 64) |	The read is paired, mapped in a proper pair, is the first read in the pair, and it is mapped to the reverse strand.
+99 (= 1 + 2 + 32 + 64) |	The read is paired, mapped in a proper pair, is the first read in the pair, and its mate is mapped to the reverse strand.
+133 (= 1 + 4 + 128) |	The read is paired, is the second read in the pair, and it is unmapped.
+137 (= 1 + 8 + 128)  |	The read is paired, is the second read in the pair, and it is mapped while its mate is not.
+141 (= 1 + 4 + 8 + 128) |	The read is paired, is the second read in the pair, but both are unmapped.
+147 (= 1 + 2 + 16 + 128) |	The read is paired, mapped in a proper pair, is the second read in the pair, and mapped to the reverse strand.
+163 (= 1 + 2 + 32 + 128) |	The read is paired, mapped in a proper pair, is the second read in the pair, and its mate is mapped to the reverse strand.
 
-```
-Value of flag is given by 
-```
-1x1 + 1x2 + 0x4 + 0x8 + 0x16 + 1x32 + 0x64 + 1x128 + 0x256 + 0x512 + 0x1024 = 163
-```
+
 
 See also
 
@@ -344,3 +346,12 @@ e.g.
     + 15 matches following by 87 bases skipped followed by 70 matches etc.
 
 
+#### 3. Check the alignment stats
+
+1. Use the tool *NGS: SAMtools -> Flagstat* to generate some statistics about how many reads were aligned
+
+![](media/pcr_dups.png)
+
+#### 4. Mark Duplicates with Picard
+
+1. Use the tool *NGS: Picard -> MarkDuplicates* to record which reads are potentially PCR duplicates
