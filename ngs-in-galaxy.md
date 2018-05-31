@@ -31,7 +31,7 @@ This tutorial will cover the basics of NGS analysis using Galaxy; a open-source 
 
 Parts of this tutorial are based on the NGS tutorial from the Galaxy Project
 
-- [https://galaxyproject.org/tutorials/ngs/](Galaxy NGS Tutorial)
+- [Galaxy NGS Tutorial](https://galaxyproject.org/tutorials/ngs/)
 
 
 -----
@@ -39,17 +39,15 @@ Parts of this tutorial are based on the NGS tutorial from the Galaxy Project
 ## Background
 
 #### Where do the data in this tutorial come from?
-The data for this tutorial are publicaly-available exome sequencing data *downsampled* to the BRCA2 region from a fictitious patient. We will use these data throughout the course to call variants, filter and discuss the clinical impact of any mutations
+The data for this tutorial are publicaly-available exome sequencing data *downsampled* to the BRCA2 region from a fictitious patient. We will use these data throughout the course to call variants, filter and discuss the clinical impact of any mutations. This is paired-end data, so we get two fastq files.
 
 ## Section 1: Preparation
 
 #### 1.  Register as a new user on one of the public Galaxy servers
 
 - https://usegalaxy.org/
-- https://galaxy-mel.genome.edu.au/galaxy/
-- http://galaxy-tut.genome.edu.au/galaxy/
-- https://galaxy-qld.genome.edu.au/galaxy
-- https://galaxy.hidelab.org/
+- https://usegalaxy.org.au
+- https://usegalaxy.eu
 
 **Make sure you check your email to activate your account**
 
@@ -70,10 +68,11 @@ You can import the data by:
     - `JoeBlogsBRCAPanel_R1.fastq`
     - `JoeBlogsBRCAPanel_R2.fastq`
 
-    These files can be renamed by clicking the **pen icon** if you wish.
 
-4. You can view the files by clicking the **eye icon**. The first few lines should read as follows
 
+## Section 2: Fastq file format
+
+You can view the files you just uploaded by clicking the **eye icon** the history item. The first few lines should read as follows
 
 
 **JoeBlogsBRCAPanel_R1.fastq**
@@ -148,7 +147,7 @@ In practice, we don't have to convert the values as we have software that will d
 
 -----
 
-## Section 2 (Optional): Quality assessment with FastQC
+## Section 3 (Optional): Quality assessment with FastQC
 
 [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) is a popular tool from [Babraham Institute Bioinformatics Group](https://www.bioinformatics.babraham.ac.uk/index.html) used for *quality assessment* of sequencing data. Most Bioinformatics pipelines will use FastQC, or similar tools in the first stage of the analysis. The [documentation](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/) for FastQC will help you to interpret the plots and stats produced by the tool. A traffic light system is used to alert the user's attention to possible issues. However, it is worth bearing in mind that the tool is blind to the particular type of sequencing you are performing (i.e. whole-genome, ChIP-seq, RNA-seq), so some warnings might be expected due to the nature of your experiment.
 
@@ -162,19 +161,35 @@ Look at the generated FastQC metrics. This data looks pretty good - high per-bas
 
 
 
-## Section 3: Alignment [30 mins]
+## Section 4: Alignment
+
+We don't really spend much time look at *fastq* files, as most of our time is spent with *aligned* reads. i.e. we have used some software to tell us whereabouts in the genome each read belongs to. This will *usually* be performed for you as part of a sequencing service, but it is good to get an appreciation of the steps involved.
 
 In this section we map the reads in our FASTQ files to a reference genome. 
 
 
+#### 1.Align the example files  
 
-**Exercise**
+![](media/bowtie2-tool.png)
 
-- What percentage of reads are aligned for each fastq file?
-    + use the *align_summary* output to find out
+- Find the tool *NGS: Mapping* -> *Bowtie2*
+  + alternatively, type `bowtie` in the search box
+- In *Is this single-end or Paired-end?* Select **Paired-end**
+- Set *FastQ file #1* and *FastQ file #2* to the two fastq files you uploaded in the previous step
+- Make sure the reference genome is set to **Human (Homo sapiens)(b37):hg19**
+- Press *Execute*
+- Wait!
+
+The result will be a `.bam` file that we will describe in the next section. This file is not human-readable, as it is compresed. But we can convert to a readable format for illustration purposes.
+
+#### 2. View the alignments
+
+1.  Click on the eye of the resulting file to view the alignments.
 
 
-## About the `bam` file format
+![](media/bam-alignments.png)
+
+### About the `bam` file format
 
 Unlike most of Bioinfomatics, a *single standard* file format has emerged for aligned reads. Moreoever, this file format is consistent regardless of whether you have DNA-seq, RNA-seq, ChIP-seq... data. 
 
@@ -327,17 +342,5 @@ e.g.
     + 1 soft-clipped read followed by 67 matches
 - `15M87N70M90N16M`
     + 15 matches following by 87 bases skipped followed by 70 matches etc.
-
-Rather than dealing with `.sam` files, we usually analyse a `.bam` file.
-
-#### [Optional] Convert BAM to SAM
-
-It useful to understand the BAM/SAM format.  Convert one of your BAM files to SAM format, and
-view the text within Galaxy
-
-1.  **NGS: SAM Tools> BAM-to-SAM convert BAM to SAM** and select one of you BAM files
-2.  Click on the eye of the resulting file to view the SAM alignments.
-
------
 
 
