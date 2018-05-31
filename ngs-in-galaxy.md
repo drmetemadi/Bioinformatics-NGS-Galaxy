@@ -139,15 +139,9 @@ I  | 73 | 40 | 0.0001000000
 
 In practice, we don't have to convert the values as we have software that will do this automatically
 
-**Exercise**: 
-
-- How many lines of data are present in the file `JoeBlogsBRCAPanel_R1.fastq`
-  + use the tool *Text Manipulation -> Line/Word/Character count* to find out
-- How many reads does this correspond to?
-
 -----
 
-## Section 3 (Optional): Quality assessment with FastQC
+## Section 3: Quality assessment with FastQC
 
 [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) is a popular tool from [Babraham Institute Bioinformatics Group](https://www.bioinformatics.babraham.ac.uk/index.html) used for *quality assessment* of sequencing data. Most Bioinformatics pipelines will use FastQC, or similar tools in the first stage of the analysis. The [documentation](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/) for FastQC will help you to interpret the plots and stats produced by the tool. A traffic light system is used to alert the user's attention to possible issues. However, it is worth bearing in mind that the tool is blind to the particular type of sequencing you are performing (i.e. whole-genome, ChIP-seq, RNA-seq), so some warnings might be expected due to the nature of your experiment.
 
@@ -219,32 +213,25 @@ The `bam` file is a compressed, binary, version of a `sam` file.
 The first part of the header lists the names (`SN`) of the sequences (chromosomes) used in alignment, their length (`LN`) and a *md5sum* "[digital fingerprint](https://en.wikipedia.org/wiki/Md5sum)" of the `.fasta` file used for alignment (`M5`).
 
 ```
-@HD	VN:1.5	SO:coordinate	GO:none
-@SQ	SN:1	LN:249250621	M5:1b22b98cdeb4a9304cb5d48026a85128
-@SQ	SN:2	LN:243199373	M5:a0d9851da00400dec1098a9255ac712e
-@SQ	SN:3	LN:198022430	M5:fdfd811849cc2fadebc929bb925902e5
-@SQ	SN:4	LN:191154276	M5:23dccd106897542ad87d2765d28a19a1
+
+@HD VN:1.0 SO:coordinate
+@SQ SN:chr10 LN:135534747
+@SQ SN:chr11 LN:135006516
+@SQ SN:chr11_gl000202_random LN:40103
+@SQ SN:chr12 LN:133851895
+@SQ SN:chr13 LN:115169878
+@SQ SN:chr14 LN:107349540
+@SQ SN:chr15 LN:102531392
+@SQ SN:chr16 LN:90354753
 .....
 .....
 
 ```
 
-Next we can define the *read groups* present in the file which we can use to identify which sequencing library, sequencing centre, Lane, sample name etc.
 
+We also have a section where we can record the processing steps used to derive the file
 ```
-@RG	ID:SRR077850	CN:bi	LB:Solexa-42057	PL:illumina	PU:ILLUMINA	SM:NA06984
-@RG	ID:SRR081675	CN:bi	LB:Solexa-42316	PL:illumina	PU:ILLUMINA	SM:NA06984
-@RG	ID:SRR080818	CN:bi	LB:Solexa-44770	PL:illumina	PU:ILLUMINA	SM:NA06984
-@RG	ID:SRR084838	CN:bi	LB:Solexa-42316	PL:illumina	PU:ILLUMINA	SM:NA06984
-@RG	ID:SRR081730	CN:bi	LB:Solexa-42316	PL:illumina	PU:ILLUMINA	SM:NA06984
-.....
-.....
-
-```
-
-Finally, we have a section where we can record the processing steps used to derive the file
-```
-@PG	ID:MosaikAligner	CL:/share/home/wardag/programs/MOSAIK/bin/MosaikAligner -in /scratch/wardag/NA06984.SRR077850.mapped.illumina.mosaik.CEU.SINGLE.20111114/NA06984.SRR077850.mapped.illumina.mosaik.CEU.SINGLE.20111114.mkb -out
+@PG ID:bowtie2 PN:bowtie2 VN:2.3.4.1 CL:"/jetstream/scratch0/main/conda/envs/mulled-v1-65d5efe4f1b69ab7166d1a5a5616adebe902133ea3e4c189d87d7de2e21ddc17/bin/bowtie2-align-s --wrapper basic-0 -p 10 -x /cvmfs/data.galaxyproject.org/byhand/hg19/hg19full/bowtie2_index/hg19full -1 input_f.fastq -2 input_r.fastq"
 ....
 ....
 
@@ -348,10 +335,32 @@ e.g.
 
 #### 3. Check the alignment stats
 
-1. Use the tool *NGS: SAMtools -> Flagstat* to generate some statistics about how many reads were aligned
+We will now generate a few basic statistics about the alignment of our data
+
+1. Select the tool *NGS: SAMtools -> Flagstat* 
+2. In the *BAM File to Convert* box choose the bam file produced by bowtie2.
+
+
+The tool will also report how many ***PCR Duplicates*** have been found in the data. But as we haven't yet run any software to identify such reads, the flagstat output will show 0 reads.
+
+### About Duplicates
+
+The preparation of a sequencing library requires *PCR* amplification of your starting material. This can lead to some DNA fragments being over-represented in your data. As our DNA fragments are formed in a random process, and relatively small compared to the number of bases to be sequenced from the genome (3Gb in humans), we tend to think the two DNA fragments that have identical starting and ending position are unlikely to have occured due to chance. Some software, such as [Picard](http://broadinstitute.github.io/picard/) will identify such artefacts and *mark* them for attention by downstream methods. i.e. they are not completely discarded from the analysis.
 
 ![](media/pcr_dups.png)
 
 #### 4. Mark Duplicates with Picard
 
-1. Use the tool *NGS: Picard -> MarkDuplicates* to record which reads are potentially PCR duplicates
+1. Use the tool *NGS: Picard -> MarkDuplicates*
+2. In *Select SAM/BAM dataset or dataset collection* choose the bam file produced by bowtie2.
+3. What do you notice about the *flag* values for any reads that have the same *start* as another read? 
+4. Interpret the meaning of these flags using the online tool
+  + https://broadinstitute.github.io/picard/explain-flags.html
+
+**Warning** the assumption about reads having the same start location being PCR duplicates falls down when we do sequencing for a very specific region of the genome. e.g. targeted sequencing from a panel of cancer genes. Running a tool to mark PCR duplicates on such data would recommend a high proportion of reads be ignored from further analysis.
+  
+#### 5. (Optional) Re-run the alignment statistics
+
+1. Select the tool *NGS: SAMtools -> Flagstat* 
+2. In the *BAM File to Convert* box choose the bam file produced by the *mark duplicates* step
+
