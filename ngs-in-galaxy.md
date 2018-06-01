@@ -33,6 +33,9 @@ Parts of this tutorial are based on the NGS tutorial from the Galaxy Project
 
 - [Galaxy NGS Tutorial](https://galaxyproject.org/tutorials/ngs/)
 
+The tutorial covers the following steps in our analysis pipeline
+
+![](media/pipeline.png)
 
 -----
 
