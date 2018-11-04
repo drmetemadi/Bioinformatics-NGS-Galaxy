@@ -17,7 +17,7 @@ editor_options:
 # Hands-on NGS Analysis in Galaxy
 
 ### Sheffield Bioinformatics Core
-<img src="media/site-logo.png" width=75 height=75 align=right>
+<img src="media/logo-sm.png" align=right>
 
 web : [sbc.shef.ac.uk](http://sbc.shef.ac.uk)  
 twitter: [SheffBioinfCore](https://twitter.com/SheffBioinfCore)  
