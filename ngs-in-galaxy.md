@@ -459,3 +459,14 @@ We can use the zoom control, and also move along the genome by holding down by m
 The text box should now update to show the coordinates of `BRCA1` (`chr17:....`). At the bottom of the screen we can now see the *gene model* for the gene `BRCA1`.  Genes are represented as lines and boxes. Lines represent intronic regions and boxes represent exonic regions. The arrows indicate the direction / strand of transcription for the gene.
 
 ![](media/gene_region.PNG)
+
+4. Load the aligned reads
+
+Choose File > Load from File..., select the bam file that you downloaded from Galaxy, and click OK. Note that the bam and index files must be in the same directory for IGV to load these properly.
+
+![](media/select_bam.PNG)
+
+The main display of IGV should now update to hold tracks for the aligned reads from this bam file. It may seem like nothing is being displayed. This is because we are zoomed-out too far to be able to see the reads. **Use the zoom function and move along the genome until you get to the first exon of BRCA1**. After you have zoomed-in far enough you will start to see some grey rectangles. *These are the aligned reads*.
+
+
+If you hover over a particular read, how will see columns from the bam file being displayed such as the mapping quality and information about the paired reads.
