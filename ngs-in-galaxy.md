@@ -202,7 +202,7 @@ Alignment relies on the reference genome being *indexed* so that the sequencing 
   + alternatively, type `bowtie` in the search box
 - In *Is this single-end or Paired-end?* Select **Paired-end**
 - Set *FastQ file #1* and *FastQ file #2* to the two fastq files you uploaded in the previous step
-- Make sure the reference genome is set to **Human (Homo sapiens)(b37):hg19**
+- Make sure the reference genome is set to **Human (Homo sapiens)(b37):(hg19 with mtDNA replaced with rCRS): Homo_Sapiens_nuHg19_mtCRS**
 - Press *Execute*
 - Wait!
 
@@ -288,6 +288,12 @@ Column | Official Name | Brief
 There can also be all manner of optional tags as extra columns introduce by an aligner or downstream analysis tool. A common use is the `RG` tag which refers back to the read groups in the header.
 
 
+### Sorting and indexing
+
+You will notice from the 3rd column that the reads are ordered according to their start position; whereas the reads in the `fastq` file were arranged in order that they were generated on the flow cell. By default, `bowtie2` produces a bam where the reads are in the same order as the `fastq`. However, this is rather incovenient for analysis where we require reads from the same location to be next to each other in the file.
+
+An additional couple of steps have been performed after bowtie2; sorting the file according to genome position and producing an *index* file. The index file does not provide any useful information for us and cannot be viewed in Galaxy. However, we will need it later on when viewing the data in IGV. 
+
 ### Dr Mark Dunning presents....Fun with flags!
 
 The *"flags"* in the sam file can represent useful QC information
@@ -371,7 +377,8 @@ The tool will also report how many ***PCR Duplicates*** have been found in the d
 1. Find the tool *SAMtools -> Idxstats*
 2. In the *BAM file* dropdown select the bam file produced by bowtie2
 
-The output of this tool will tell you how many reads aligned to each chromosome in your reference genome. For our example dataset we only reads from a small region, so shouldn't expect to see alignments to each chromosome.
+The output of this tool will tell you how many reads aligned to each chromosome in your reference genome. For our example dataset we only have reads from a small region, so shouldn't expect to see alignments to each chromosome.
+
 
 
 ### About Duplicates
@@ -395,7 +402,15 @@ The preparation of a sequencing library requires *PCR* amplification of your sta
 1. Select the tool *NGS: SAMtools -> Flagstat* 
 2. In the *BAM File to Convert* box choose the bam file produced by the *mark duplicates* step
 
-# Section 4. Visualising the aligned reads with IGV
+#### 6. Download your bam file
+
+For the next setp you will need to download the `bam` file that you produced after *marking duplicates*. To do this, you can click the floppy disk icon.
+
+![](media/download_bam.png)
+
+**Make sure that you click both Download dataset and Download bam_index**
+
+# Section 5. Visualising the aligned reads with IGV
 
 Whilst Bioinformatics tools are very powerful and allow you to perform statistical analyses and test hypotheses, there is no substitute for **looking at and exploring the data**. A trained-eye can quite quickly get a sense of the data quality before any computational analyses have been run. Futhermore, as the person requesting the sequencing, you probably know a lot about the biological context of the samples and what to expect.
 
