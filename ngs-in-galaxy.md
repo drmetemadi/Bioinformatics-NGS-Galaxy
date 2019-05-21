@@ -148,7 +148,7 @@ In practice, we don't have to convert the values as we have software that will d
 
 [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) is a popular tool from [Babraham Institute Bioinformatics Group](https://www.bioinformatics.babraham.ac.uk/index.html) used for *quality assessment* of sequencing data. Most Bioinformatics pipelines will use FastQC, or similar tools in the first stage of the analysis. The [documentation](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/) for FastQC will help you to interpret the plots and stats produced by the tool. A traffic light system is used to alert the user's attention to possible issues. 
 
-- From the left hand tool panel in Galaxy, under *NGS ANALYSIS*, select *NGS: QC and manipulation -> FastQC*
+- From the left hand tool panel in Galaxy, under *GENOMIC FILE MANIPULATION*, select *FASTQ Quality Control -> FastQC*
 - Select one of the FASTQ files as input and *Execute* the tool.
 - When the tool finishes running, you should have an HTML file in your History. Click on the eye icon to view the various quality metrics.
 
@@ -172,7 +172,7 @@ It is also worth bearing in mind that the tool is blind to the particular type o
 
 For datasets with large numbers of fastq files, it may be useful to aggregate the individual reports into a single combined report. 
 
-- Select *QC and manipulation* -> *multiqc*
+- Under *GENOMIC FILE MANIPULATION*, select *FASTQ Quality Control -> MultiQC*
 - Make sure *Software name* is set to `FastQC`
 - In *Results file*, select the **RawData** results files that you have just generated
 
@@ -198,11 +198,11 @@ Alignment relies on the reference genome being *indexed* so that the sequencing 
 
 ![](media/bowtie2-tool.png)
 
-- Find the tool *NGS: Mapping* -> *Bowtie2*
+- Find the tool *GENOMICS ANALYSIS* -> *Mapping* -> *Bowtie2*
   + alternatively, type `bowtie` in the search box
 - In *Is this single-end or Paired-end?* Select **Paired-end**
 - Set *FastQ file #1* and *FastQ file #2* to the two fastq files you uploaded in the previous step
-- Make sure the reference genome is set to **Human (Homo sapiens)(b37):(hg19 with mtDNA replaced with rCRS): Homo_Sapiens_nuHg19_mtCRS**
+- Make sure the reference genome is set to **Human (Homo sapiens):hg19chrM Mitochondrial DNA**
 - Press *Execute*
 - Wait!
 
@@ -389,7 +389,7 @@ The preparation of a sequencing library requires *PCR* amplification of your sta
 
 #### 4. Mark Duplicates with Picard
 
-1. Use the tool *NGS: Picard -> MarkDuplicates*
+1. Use the tool *GENOMICS TOOLKITS -> Picard -> MarkDuplicates*
 2. In *Select SAM/BAM dataset or dataset collection* choose the bam file produced by bowtie2.
 3. What do you notice about the *flag* values for any reads that have the same *start* as another read? 
 4. Interpret the meaning of these flags using the online tool
@@ -399,7 +399,7 @@ The preparation of a sequencing library requires *PCR* amplification of your sta
   
 #### 5. (Optional) Re-run the alignment statistics
 
-1. Select the tool *NGS: SAMtools -> Flagstat* 
+1. Select the tool *GENOMIC FILE MANIPULATION -> SAM/BAM -> Samtools flagstat* 
 2. In the *BAM File to Convert* box choose the bam file produced by the *mark duplicates* step
 
 #### 6. Download your bam file
