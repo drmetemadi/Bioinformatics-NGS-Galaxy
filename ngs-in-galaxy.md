@@ -202,7 +202,7 @@ Alignment relies on the reference genome being *indexed* so that the sequencing 
   + alternatively, type `bowtie` in the search box
 - In *Is this single-end or Paired-end?* Select **Paired-end**
 - Set *FastQ file #1* and *FastQ file #2* to the two fastq files you uploaded in the previous step
-- Make sure the reference genome is set to **Human (Homo sapiens):hg19chrM Mitochondrial DNA**
+- Make sure the reference genome is set to **Human (Homo sapiens):hg19**
 - Press *Execute*
 - Wait!
 
