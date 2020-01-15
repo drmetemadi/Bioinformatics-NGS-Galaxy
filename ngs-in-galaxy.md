@@ -66,8 +66,7 @@ You can import the data by:
 1.  In the tool panel located on the left, under Basic Tools select **Get
     Data > Upload File**. Click on the **Paste/Fetch data** button on the
     bottom section of the pop-up window.
-2.  Upload the sequence data by selecting the files `JoeBlogsBRCAPanel_R1.fastq` and `JoeBlogsBRCAPanel_R2.fastq`. Make sure the type is specified as '**fastqsanger**'
-    when uploading.
+2.  Upload the sequence data by selecting the files `JoeBlogsBRCAPanel_R1.fastq` and `JoeBlogsBRCAPanel_R2.fastq`. You don't need to specify the file type or genome build. Galaxy should be able to make a reasonable guess.
 
 
 3.  You should now have these 2 files in your history:
@@ -102,7 +101,7 @@ TGGAAAGACTTTTGGGGGGGGGAGTATTTTTCTTGTTTCTGGTTTTGGTTTTTTTGATCCGGGAAAGATTTTGTTTTTTG
 
 The first line is the unique identifier for each sequenced read. It can be used to encode information such as the *sequencing machine*, *flow cell* and *lane* that the read was generated from and the physical coordinates on the lane.  
 
-The quality scores are [ASCII](http://ascii-code.com/) representations of how confident we are that a particular base has been called correctly. Letters that are further along the alphabet indicate higher confidence. This is important when trying to identify types of genome variation such as single base changes, but is also indicative of the overall quality of the sequencing. Different scales have been employed over time (resulting in a different set of characters appearing in the file). We will need to tell Galaxy which scale has been used in order that we can process the data correctly; hence why we explicitly stated the files were of type **fastqsanger** when we uploaded them. 
+The quality scores are [ASCII](http://ascii-code.com/) representations of how confident we are that a particular base has been called correctly. Letters that are further along the alphabet indicate higher confidence. This is important when trying to identify types of genome variation such as single base changes, but is also indicative of the overall quality of the sequencing. Different scales have been employed over time (resulting in a different set of characters appearing in the file). 
 
 
 ### Deriving the Quality Score
@@ -294,7 +293,7 @@ You will notice from the 3rd column that the reads are ordered according to thei
 
 An additional couple of steps have been performed after bowtie2; sorting the file according to genome position and producing an *index* file. The index file does not provide any useful information for us and cannot be viewed in Galaxy. However, we will need it later on when viewing the data in IGV. 
 
-### Dr Mark Dunning presents....Fun with flags!
+### Quality Flags
 
 The *"flags"* in the sam file can represent useful QC information
 
@@ -436,6 +435,12 @@ Double-Click the file `igv` to launch IGV
 
 ![](media/run_igv.PNG)
 
+<font size="5">
+If you are unable to download IGV, you should be able to run a web-app from the Broad Institute website with the same functionality.
+
+https://igv.org/app/
+
+</font>
 
 
 2. Load a reference Genome and some Data Tracks
