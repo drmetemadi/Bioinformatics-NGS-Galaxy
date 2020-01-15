@@ -2,12 +2,12 @@
 title: ""
 author: "Mark Dunning"
 output:
-  html_document:
-    df_print: paged
-    toc: yes
   html_notebook:
     toc: yes
     toc_float: yes
+  html_document:
+    df_print: paged
+    toc: yes
 editor_options:
   chunk_output_type: inline
 ---
